@@ -1,16 +1,18 @@
 //  OpenShift sample Node application
 var express = require('express'),
     app     = express(),
-    morgan  = require('morgan');
-const bodyParser = require('body-parser');
-Object.assign=require('object-assign')
+    bodyParser = require('body-parser'),
+    morgan  = require('morgan'),
+    routes = require('./api/routes');
 
+Object.assign=require('object-assign')
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'))
+routes(app);
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
@@ -173,6 +175,8 @@ app.get('*', function(req, res){
   res.status(404).send( error_message( 'what???' ) );
   console.log(JSON.stringify( error_message('what???') ));
 });
+
+
 
 // error handling
 app.use(function(err, req, res, next){
